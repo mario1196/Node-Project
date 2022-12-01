@@ -1,0 +1,25 @@
+<div style="display: flex">
+<form action="/profiles" method="POST">
+    <input type="text" id="searchProfile" name="searchProfile">
+    <button type="submit">Search</button>
+</form>
+
+<form action="/profiles" method="GET">
+    <button type="submit">Back</button>
+</form>
+</div>
+
+<div>
+    <a href="/profiles/edit"><button>Create New Profile</button></a>
+</div>
+
+<ul id="myUL">
+    <% for (let i=0; i < profiles.length; i++) { %>
+        <li>
+            <a href="/profiles/<%= profiles[i].id%>">
+                <%= profiles[i].name%>
+            </a>
+            <a href="/profiles/delete/<%= profiles[i].id %>"><button>Delete</button></a>
+        </li>
+        <% } %>
+</ul>
