@@ -12,39 +12,59 @@ const RequestService = require("../services/RequestService");
 exports.Index = async function (request, response) {
   let reqInfo = RequestService.reqHelper(request);
   console.log("loading profiles from controller");
-  if(request.body.searchProfile) {
-    console.log("search");
-    let profiles = await _userOps.getProfileBySearch(request.body.searchProfile);
-    if (profiles) {
-      response.render("profiles", {
-      title: "Express Yourself - Profiles",
-      profiles: profiles,
-      reqInfo: reqInfo
-    });
+
+  ///david added in this information////
+  if (reqInfo.authenticated) {
+    let roles = await _userOps.getRolesByUsername(reqInfo.username);
+    let sessionData = req.session;
+    sessionData.roles = roles;
+    reqInfo.roles = roles;
+    let userInfo = await _userOps.getUserByUsername(reqInfo.username);
+
+    if (request.body.searchProfile) {
+      console.log("search");
+      let profiles = await _userOps.getProfileBySearch(request.body.searchProfile);
+      if (profiles) {
+        response.render("profiles", {
+          title: "Express Yourself - Profiles",
+          profiles: profiles,
+          reqInfo: reqInfo,
+          userInfo: userInfo
+        });
+      } else {
+        response.render("profiles", {
+          title: "Express Yourself - Profiles",
+          profiles: [],
+          reqInfo: reqInfo
+        });
+      }
     } else {
-      response.render("profiles", {
-        title: "Express Yourself - Profiles",
-        profiles: [],
-        reqInfo: reqInfo
-      });
+      let profiles = await _userOps.getAllProfiles();
+      if (profiles) {
+        response.render("profiles", {
+          title: "Express Yourself - Profiles",
+          profiles: profiles,
+          reqInfo: reqInfo
+        });
+      } else {
+        response.render("profiles", {
+          title: "Express Yourself - Profiles",
+          profiles: [],
+          reqInfo: reqInfo
+        });
+      }
     }
+    // return res.render("user/profile", {
+    //   reqInfo: reqInfo,
+    //   userInfo: userInfo,
+    // });
   } else {
-    let profiles = await _userOps.getAllProfiles();
-    if (profiles) {
-      response.render("profiles", {
-      title: "Express Yourself - Profiles",
-      profiles: profiles,
-      reqInfo: reqInfo
-    });
-    } else {
-      response.render("profiles", {
-        title: "Express Yourself - Profiles",
-        profiles: [],
-        reqInfo: reqInfo
-      });
-    }
-  }
-};
+    response.redirect(
+      // "/user/login?errorMessage=You must be logged in to view this page."
+      "https://www.youtube.com/watch?v=oHg5SJYRHA0"
+    );
+  };
+}
 
 exports.Detail = async function (request, response) {
   let reqInfo = RequestService.reqHelper(request);
@@ -164,47 +184,48 @@ exports.DeleteProfileById = async function (request, response) {
 // Handle edit profile form GET request
 exports.Edit = async function (request, response) {
   let reqInfo = RequestService.reqHelper(request);
-    const profileId = request.params.id;
-    let profileObj = await _userOps.getProfileById(profileId);
-    response.render("profile-form", {
-      title: "Edit Profile",
-      errorMessage: "",
-      profile_id: profileId,
-      profile: profileObj,
+  const profileId = request.params.id;
+  let profileObj = await _userOps.getProfileById(profileId);
+  response.render("profile-form", {
+    title: "Edit Profile",
+    errorMessage: "",
+    profile_id: profileId,
+    profile: profileObj,
+    reqInfo: reqInfo
+  });
+};
+
+// Handle profile edit form submission
+exports.EditProfile = async function (request, response) {
+  let reqInfo = RequestService.reqHelper(request);
+  const profileId = request.body.profile_id;
+  const profileName = request.body.name;
+
+  // send these to profileOps to update and save the document
+  let responseObj = await _userOps.updateProfileById(profileId, profileName);
+
+  // if no errors, save was successful
+  if (responseObj.errorMsg == "") {
+    let profiles = await _userOps.getAllProfiles();
+    response.render("profile", {
+      title: "Express Yourself - " + responseObj.obj.username,
+      profiles: profiles,
+      profileId: responseObj.obj._id.valueOf(),
+      profileName: responseObj.obj.username,
+      layout: "./layouts/sidebar",
       reqInfo: reqInfo
     });
-  };
-  
-  // Handle profile edit form submission
-  exports.EditProfile = async function (request, response) {
-    let reqInfo = RequestService.reqHelper(request);
-    const profileId = request.body.profile_id;
-    const profileName = request.body.name;
-  
-    // send these to profileOps to update and save the document
-    let responseObj = await _userOps.updateProfileById(profileId, profileName);
-  
-    // if no errors, save was successful
-    if (responseObj.errorMsg == "") {
-      let profiles = await _userOps.getAllProfiles();
-      response.render("profile", {
-        title: "Express Yourself - " + responseObj.obj.username,
-        profiles: profiles,
-        profileId: responseObj.obj._id.valueOf(),
-        profileName: responseObj.obj.username,
-        layout: "./layouts/sidebar",
-        reqInfo: reqInfo
-      });
-    }
-    // There are errors. Show form the again with an error message.
-    else {
-      console.log("An error occured. Item not created.");
-      response.render("profile-form", {
-        title: "Edit Profile",
-        profile: responseObj.obj,
-        profileId: profileId,
-        errorMessage: responseObj.errorMsg,
-        reqInfo: reqInfo
-      });
-    }
-  };
+  }
+  // There are errors. Show form the again with an error message.
+  else {
+    console.log("An error occured. Item not created.");
+    response.render("profile-form", {
+      title: "Edit Profile",
+      profile: responseObj.obj,
+      profileId: profileId,
+      errorMessage: responseObj.errorMsg,
+      reqInfo: reqInfo
+    });
+  }
+};
+
