@@ -12,9 +12,9 @@ const RequestService = require("../services/RequestService");
 exports.Index = async function (request, response) {
   let reqInfo = RequestService.reqHelper(request);
   console.log("loading profiles from controller");
-  if(request.body.searchProfile) {
+  if(request.query.searchProfile) {
     console.log("search");
-    let profiles = await _userOps.getProfileBySearch(request.body.searchProfile);
+    let profiles = await _userOps.getProfileBySearch(request.query.searchProfile, request.query.searchCategory);
     if (profiles) {
       response.render("profiles", {
       title: "Express Yourself - Profiles",
