@@ -24,3 +24,17 @@ Managers
 Other Requirements 
 1.) show username when comments are created 
 2.) all other areas must be secure except the login page 
+
+
+
+To do List
+1.) users can add a photo - erik
+2.) users can add interests to there own file -erik 
+3.) search by filter - sheng
+4.) details page to show all info, comments - lisa
+5.) secure area authentication - david 
+
+
+What is working
+1.) users can register
+2.) users can login

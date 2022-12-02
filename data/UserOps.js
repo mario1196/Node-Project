@@ -2,7 +2,7 @@ const User = require("../models/User");
 
 class UserOps {
   // Constructor
-  UserOps() {}
+  UserOps() { }
 
   async getUserByEmail(email) {
     let user = await User.findOne({ email: email });
@@ -50,6 +50,7 @@ class UserOps {
 
   async getProfileBySearch(search, searchCategory) {
     console.log(`getting profile by search ${search}`);
+
     let profiles;
     if(searchCategory === "firstName"){
       profiles = await User.find({ firstName: {"$regex" :search, "$options":"i"} }).sort( {username: 1} );
@@ -60,6 +61,7 @@ class UserOps {
     } else {
       profiles = await User.find({ username: {"$regex" :search, "$options":"i"} }).sort( {username: 1} );
     }
+
     return profiles;
   }
 
