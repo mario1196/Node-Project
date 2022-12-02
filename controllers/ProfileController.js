@@ -4,7 +4,10 @@ const ProfileOps = require("../data/ProfileOps");
 // instantiate the class so we can use its methods
 const _profileOps = new ProfileOps();
 
+const RequestService = require("../services/RequestService");
+
 exports.Index = async function (request, response) {
+  let reqInfo = RequestService.reqHelper(request);
   console.log("loading profiles from controller");
   if(request.body.searchProfile) {
     console.log("search");
@@ -13,11 +16,13 @@ exports.Index = async function (request, response) {
       response.render("profiles", {
       title: "Express Yourself - Profiles",
       profiles: profiles,
+      reqInfo: reqInfo
     });
     } else {
       response.render("profiles", {
         title: "Express Yourself - Profiles",
         profiles: [],
+        reqInfo: reqInfo
       });
     }
   } else {
@@ -26,17 +31,20 @@ exports.Index = async function (request, response) {
       response.render("profiles", {
       title: "Express Yourself - Profiles",
       profiles: profiles,
+      reqInfo: reqInfo
     });
     } else {
       response.render("profiles", {
         title: "Express Yourself - Profiles",
         profiles: [],
+        reqInfo: reqInfo
       });
     }
   }
 };
 
 exports.Detail = async function (request, response) {
+  let reqInfo = RequestService.reqHelper(request);
   const profileId = request.params.id;
   console.log(`loading single profile by id ${profileId}`);
   let profile = await _profileOps.getProfileById(profileId);
@@ -48,43 +56,51 @@ exports.Detail = async function (request, response) {
       profileId: request.params.id,
       profileName: profile.name,
       layout: "./layouts/sidebar",
+      reqInfo: reqInfo
     });
   } else {
     response.render("profiles", {
       title: "Express Yourself - Profiles",
       profiles: [],
+      reqInfo: reqInfo
     });
   }
 };
 
 // Handle profile form GET request
 exports.Create = async function (request, response) {
+  let reqInfo = RequestService.reqHelper(request);
   response.render("profile-form", {
     title: "Create Profile",
     errorMessage: "",
     profile_id: null,
     profile: {},
+    reqInfo: reqInfo
   });
 };
 
 exports.Search = async function (request, response) {
+  let reqInfo = RequestService.reqHelper(request);
   console.log("Search");
   let profiles = await _profileOps.search(id);
   if (profiles) {
     response.render("profiles", {
       title: "Express Yourself - Profiles",
       profiles: profiles,
+      reqInfo: reqInfo
     });
   } else {
     response.render("profiles", {
       title: "Express Yourself - Profiles",
       profiles: [],
+      reqInfo: reqInfo
     });
   }
 };
 
 // Handle profile form GET request
 exports.CreateProfile = async function (request, response) {
+  let reqInfo = RequestService.reqHelper(request);
   // instantiate a new Profile Object populated with form data
   let tempProfileObj = new Profile({
     name: request.body.name,
@@ -103,6 +119,7 @@ exports.CreateProfile = async function (request, response) {
       profileId: responseObj.obj._id.valueOf(),
       profileName: responseObj.obj.name,
       layout: "./layouts/sidebar",
+      reqInfo: reqInfo
     });
   }
   // There are errors. Show form the again with an error message.
@@ -112,12 +129,14 @@ exports.CreateProfile = async function (request, response) {
       title: "Create Profile",
       profile: responseObj.obj,
       errorMessage: responseObj.errorMsg,
+      reqInfo: reqInfo
     });
   }
 };
 
 // Handle profile form GET request
 exports.DeleteProfileById = async function (request, response) {
+  let reqInfo = RequestService.reqHelper(request);
   const profileId = request.params.id;
   console.log(`deleting single profile by id ${profileId}`);
   let deletedProfile = await _profileOps.deleteProfileById(profileId);
@@ -127,18 +146,21 @@ exports.DeleteProfileById = async function (request, response) {
     response.render("profiles", {
       title: "Express Yourself - Profiles",
       profiles: profiles,
+      reqInfo: reqInfo
     });
   } else {
     response.render("profiles", {
       title: "Express Yourself - Profiles",
       profiles: profiles,
       errorMessage: "Error.  Unable to Delete",
+      reqInfo: reqInfo
     });
   }
 };
 
 // Handle edit profile form GET request
 exports.Edit = async function (request, response) {
+  let reqInfo = RequestService.reqHelper(request);
     const profileId = request.params.id;
     let profileObj = await _profileOps.getProfileById(profileId);
     response.render("profile-form", {
@@ -146,11 +168,13 @@ exports.Edit = async function (request, response) {
       errorMessage: "",
       profile_id: profileId,
       profile: profileObj,
+      reqInfo: reqInfo
     });
   };
   
   // Handle profile edit form submission
   exports.EditProfile = async function (request, response) {
+    let reqInfo = RequestService.reqHelper(request);
     const profileId = request.body.profile_id;
     const profileName = request.body.name;
   
@@ -166,6 +190,7 @@ exports.Edit = async function (request, response) {
         profileId: responseObj.obj._id.valueOf(),
         profileName: responseObj.obj.name,
         layout: "./layouts/sidebar",
+        reqInfo: reqInfo
       });
     }
     // There are errors. Show form the again with an error message.
@@ -176,6 +201,7 @@ exports.Edit = async function (request, response) {
         profile: responseObj.obj,
         profileId: profileId,
         errorMessage: responseObj.errorMsg,
+        reqInfo: reqInfo
       });
     }
   };

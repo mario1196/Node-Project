@@ -1,7 +1,9 @@
 const express = require("express");
 const indexRouter = express.Router();
+//const RequestService = require("../services/RequestService");
+const IndexController = require("../controllers/IndexController");
 
-indexRouter.get("/", (req, res) => res.render("index", {title: "Home"}));
+indexRouter.get("/", IndexController.Index);
 indexRouter.get("/about", (req, res) => res.render("about", {title: "About Us"}));
 //indexRouter.get("/contact", (req, res) => res.render("contact", {title: "Contact"}));
 
