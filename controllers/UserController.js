@@ -126,6 +126,17 @@ exports.Profile = async function (req, res) {
   }
 };
 
+exports.authenticatedUser = function (req, res, next) {
+  let reqInfo = RequestService.reqHelper(req);
+  if (reqInfo.authenticated) {
+    next()
+  } else {
+    res.redirect(
+      "/user/login"
+    );
+  }
+};
+
 // Manager Area available to users who belong to Admin and/or Manager role
 exports.ManagerArea = async function (req, res) {
   let reqInfo = RequestService.reqHelper(req, ["Admin", "Manager"]);
