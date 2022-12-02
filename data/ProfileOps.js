@@ -17,11 +17,29 @@ class ProfileOps {
     return profile;
   }
 
+
+
+
   async getProfileBySearch(search) {
     console.log(`getting profile by search ${search}`);
     let profiles = await Profile.find({ name: {"$regex" :search, "$options":"i"} }).sort( {name: 1} );
     return profiles;
   }
+
+  // async getProfileBySearch(search) {
+  //   console.log(`getting profile by search ${search}`);
+  //   let profiles = await Profile.find({ name: {"$regex" :search, "$options":"i"} }).sort( {name: 1} );
+  //   return profiles;
+  // }
+
+
+  // async getProfileBySearch(search) {
+  //   console.log(`getting profile by search ${search}`);
+  //   let profiles = await Profile.find({ name: {"$regex" :search, "$options":"i"} }).sort( {name: 1} );
+  //   return profiles;
+  // }
+
+
 
   async createProfile(profileObj) {
     try {

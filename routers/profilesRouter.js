@@ -34,6 +34,7 @@ profilesRouter.get("/edit/:id", ProfileController.Edit);
 profilesRouter.post("/edit/:id", ProfileController.EditProfile);
 
 profilesRouter.get("/:id", ProfileController.Detail);
+profilesRouter.post("/:id", ProfileController.Comment);
 
 profilesRouter.get("/delete/:id", ProfileController.DeleteProfileById);
 
