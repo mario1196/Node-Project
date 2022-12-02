@@ -1,17 +1,20 @@
 const Profile = require("../models/Profile.js");
 
 const ProfileOps = require("../data/ProfileOps");
+const UserOps = require("../data/UserOps.js");
 // instantiate the class so we can use its methods
 const _profileOps = new ProfileOps();
+const _userOps = new UserOps()
 
 const RequestService = require("../services/RequestService");
+//const UserOps = require("../data/UserOps.js");
 
 exports.Index = async function (request, response) {
   let reqInfo = RequestService.reqHelper(request);
   console.log("loading profiles from controller");
   if(request.body.searchProfile) {
     console.log("search");
-    let profiles = await _profileOps.getProfileBySearch(request.body.searchProfile);
+    let profiles = await _userOps.getProfileBySearch(request.body.searchProfile);
     if (profiles) {
       response.render("profiles", {
       title: "Express Yourself - Profiles",
@@ -26,7 +29,7 @@ exports.Index = async function (request, response) {
       });
     }
   } else {
-    let profiles = await _profileOps.getAllProfiles();
+    let profiles = await _userOps.getAllProfiles();
     if (profiles) {
       response.render("profiles", {
       title: "Express Yourself - Profiles",
@@ -47,14 +50,14 @@ exports.Detail = async function (request, response) {
   let reqInfo = RequestService.reqHelper(request);
   const profileId = request.params.id;
   console.log(`loading single profile by id ${profileId}`);
-  let profile = await _profileOps.getProfileById(profileId);
-  let profiles = await _profileOps.getAllProfiles();
+  let profile = await _userOps.getProfileById(profileId);
+  let profiles = await _userOps.getAllProfiles();
   if (profile) {
     response.render("profile", {
       title: "Express Yourself - " + profile.name,
       profiles: profiles,
       profileId: request.params.id,
-      profileName: profile.name,
+      profileName: profile.username,
       layout: "./layouts/sidebar",
       reqInfo: reqInfo
     });
@@ -139,8 +142,8 @@ exports.DeleteProfileById = async function (request, response) {
   let reqInfo = RequestService.reqHelper(request);
   const profileId = request.params.id;
   console.log(`deleting single profile by id ${profileId}`);
-  let deletedProfile = await _profileOps.deleteProfileById(profileId);
-  let profiles = await _profileOps.getAllProfiles();
+  let deletedProfile = await _userOps.deleteProfileById(profileId);
+  let profiles = await _userOps.getAllProfiles();
 
   if (deletedProfile) {
     response.render("profiles", {
@@ -162,7 +165,7 @@ exports.DeleteProfileById = async function (request, response) {
 exports.Edit = async function (request, response) {
   let reqInfo = RequestService.reqHelper(request);
     const profileId = request.params.id;
-    let profileObj = await _profileOps.getProfileById(profileId);
+    let profileObj = await _userOps.getProfileById(profileId);
     response.render("profile-form", {
       title: "Edit Profile",
       errorMessage: "",
@@ -179,16 +182,16 @@ exports.Edit = async function (request, response) {
     const profileName = request.body.name;
   
     // send these to profileOps to update and save the document
-    let responseObj = await _profileOps.updateProfileById(profileId, profileName);
+    let responseObj = await _userOps.updateProfileById(profileId, profileName);
   
     // if no errors, save was successful
     if (responseObj.errorMsg == "") {
-      let profiles = await _profileOps.getAllProfiles();
+      let profiles = await _userOps.getAllProfiles();
       response.render("profile", {
-        title: "Express Yourself - " + responseObj.obj.name,
+        title: "Express Yourself - " + responseObj.obj.username,
         profiles: profiles,
         profileId: responseObj.obj._id.valueOf(),
-        profileName: responseObj.obj.name,
+        profileName: responseObj.obj.username,
         layout: "./layouts/sidebar",
         reqInfo: reqInfo
       });

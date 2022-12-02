@@ -17,9 +17,9 @@
     <% for (let i=0; i < profiles.length; i++) { %>
         <li>
             <a href="/profiles/<%= profiles[i].id%>">
-                <%= profiles[i].name%>
+                <%= profiles[i].username%>
             </a>
-            <a href="/profiles/delete/<%= profiles[i].id %>"><button>Delete</button></a>
+            <a href="/profiles/delete/<%= profiles[i].id %>"> <button>Delete</button></a>
         </li>
         <% } %>
 </ul>
