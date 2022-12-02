@@ -14,7 +14,12 @@
     <input id="email" name="email" type="text" value="<%= profile.email ? profile.email : '' %>" >
     <label for="interests">Interests:</label>
     <input id="interests" name="interests" type="text" value="<%= profile.interests.join(', ') %>">
-    
+      <br>
+      <label for="roles">Roles:</label>
+      
+      <input type="checkbox" name="roles" value="Admin" <%= profile.roles.includes("Admin") && "checked"%>>Admin
+      <input type="checkbox" name="roles" value="Manager" <%= profile.roles.includes("Manager") && "checked"%>>Manager
+      <input type="checkbox" name="roles" value="User" <%= profile.roles.includes("User") && "checked"%>>User
     <input id="profilePic" name="profilePic" type="hidden" value="<%= profile.imagePath %>">
     <% if (profile.imagePath) { %>
         <img src="<%= profile.imagePath %>">

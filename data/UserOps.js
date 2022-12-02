@@ -114,7 +114,7 @@ class UserOps {
     return result;
   }
 
-  async updateProfileById(id, profileName, profileFirstName, profileLastName, email, profileInterests, imagePath) {
+  async updateProfileById(id, profileName, profileFirstName, profileLastName, email, profileInterests, imagePath, profileRoles) {
     console.log(`updating profile by id ${id}`);
     const profile = await User.findById(id);
     console.log("original profile: ", profile);
@@ -124,6 +124,7 @@ class UserOps {
     profile.email = email;
     profile.interests = profileInterests;
     profile.imagePath = imagePath;
+    profile.roles = profileRoles;
 
     let result = await profile.save();
     console.log("updated profile: ", result);
