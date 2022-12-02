@@ -20,7 +20,16 @@ exports.Index = async function (request, response) {
     sessionData.roles = roles;
     reqInfo.roles = roles;
     let userInfo = await _userOps.getUserByUsername(reqInfo.username);
-
+    if(request.query.searchProfile) {
+    console.log("search");
+    let profiles = await _userOps.getProfileBySearch(request.query.searchProfile, request.query.searchCategory);
+    if (profiles) {
+      response.render("profiles", {
+      title: "Express Yourself - Profiles",
+      profiles: profiles,
+      reqInfo: reqInfo
+    });
+    }
     if (request.body.searchProfile) {
       console.log("search");
       let profiles = await _userOps.getProfileBySearch(request.body.searchProfile);
