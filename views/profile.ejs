@@ -6,6 +6,14 @@
         <p>Username : <%= profileName %></p>
         <p>Name : <%= profileFirstName %> <%= profileLastName %></p>
         <p>Email : <%= profileEmail %></p>
+
+        <img src="<%= profileImagePath %>" alt="<%= profileFirstName %>" />
+
+        <ul>
+        <% for (let j = 0; j < profileInterests.length; j++) { %>
+            <li><%= profileInterests[j] %></li>
+        <% } %>
+        </ul>
         <p>Leave me a comment: </p>
     </div>
     <form action="/profiles/<%= profileId %>" method="POST">
