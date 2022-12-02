@@ -1,5 +1,5 @@
 const Profile = require("../models/Profile.js");
-
+const path = require("path");
 const ProfileOps = require("../data/ProfileOps");
 const UserOps = require("../data/UserOps.js");
 // instantiate the class so we can use its methods
@@ -209,6 +209,7 @@ exports.DeleteProfileById = async function (request, response) {
   }
 };
 
+
 // Handle edit profile form GET request
 exports.Edit = async function (request, response) {
   let reqInfo = RequestService.reqHelper(request);
@@ -222,38 +223,66 @@ exports.Edit = async function (request, response) {
     reqInfo: reqInfo
   });
 };
+  
+  // Handle profile edit form submission
+  exports.EditProfile = async function (request, response) {
+    let reqInfo = RequestService.reqHelper(request);
+    /*
+    let picture;
+    if (request.files) {
+      console.log(request.files);
+      picture = request.files;
+    } else {
+      console.log("it is empty");
+    }
+    */
+    const { picture } = request.files;
+    let imagePath = request.body.profilePic || "";
+    if (picture) {
+      imagePath = `/images/${picture.name}`;
+      const serverPath = path.join(__dirname, "../public", imagePath);
+      picture.mv(serverPath);
+    }
 
-// Handle profile edit form submission
-exports.EditProfile = async function (request, response) {
-  let reqInfo = RequestService.reqHelper(request);
-  const profileId = request.body.profile_id;
-  const profileName = request.body.name;
+    const profileId = request.body.profile_id;
+    const profileName = request.body.name;
+    const profileFirstName = request.body.firstname;
+    const profileLastName = request.body.lastname;
+    let profileInterests = [];
+    if (request.body.interests) {
+      profileInterests = request.body.interests.split(", ");
+    }
+    const email = request.body.email;
+  
+    // send these to profileOps to update and save the document
+    let responseObj = await _userOps.updateProfileById(profileId, profileName, profileFirstName, profileLastName, email, profileInterests, imagePath);
+  
+    // if no errors, save was successful
+    if (responseObj.errorMsg == "") {
+      let profiles = await _userOps.getAllProfiles();
+      response.render("profile", {
+        title: "Express Yourself - " + responseObj.obj.username,
+        profiles: profiles,
+        profileId: responseObj.obj._id.valueOf(),
+        profileName: responseObj.obj.username,
+        profileFirstName: responseObj.obj.firstName,
+        profileLastName: responseObj.obj.lastName,
+        profileEmail: responseObj.obj.email,
+        profileComment: responseObj.obj.comments,
+        layout: "./layouts/sidebar",
+        reqInfo: reqInfo
+      });
+    }
+    // There are errors. Show form the again with an error message.
+    else {
+      console.log("An error occured. Item not created.");
+      response.render("profile-form", {
+        title: "Edit Profile",
+        profile: responseObj.obj,
+        profileId: profileId,
+        reqInfo: reqInfo
+      });
+    }
+  };
 
-  // send these to profileOps to update and save the document
-  let responseObj = await _userOps.updateProfileById(profileId, profileName);
-
-  // if no errors, save was successful
-  if (responseObj.errorMsg == "") {
-    let profiles = await _userOps.getAllProfiles();
-    response.render("profile", {
-      title: "Express Yourself - " + responseObj.obj.username,
-      profiles: profiles,
-      profileId: responseObj.obj._id.valueOf(),
-      profileName: responseObj.obj.username,
-      layout: "./layouts/sidebar",
-      reqInfo: reqInfo
-    });
-  }
-  // There are errors. Show form the again with an error message.
-  else {
-    console.log("An error occured. Item not created.");
-    response.render("profile-form", {
-      title: "Edit Profile",
-      profile: responseObj.obj,
-      profileId: profileId,
-      errorMessage: responseObj.errorMsg,
-      reqInfo: reqInfo
-    });
-  }
-};
 

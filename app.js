@@ -17,6 +17,7 @@ db.on("error", console.error.bind(console, "MongoDB connection error:"));
 const express = require("express");
 const path = require("path");
 const bodyParser = require("body-parser");
+const fileUpload = require('express-fileupload');
 
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
@@ -47,6 +48,7 @@ app.use(logger("dev")); // method, path, status, time
 // Express.static middleware to make the public folder globally accessible
 app.use(express.static("public"));
 
+app.use(fileUpload());
 // Enable layouts
 app.use(expressLayouts);
 // Set the default layout
@@ -101,15 +103,33 @@ passport.deserializeUser(User.deserializeUser());
 // index routes
 app.use(indexRouter);
 
-// movie routes
-app.use("/profiles", profilesRouter);
-
 // api routes
 app.use("/api", apiRouter);
 
 // User routes
 const userRouter = require("./routers/userRouter");
 app.use("/user", userRouter);
+
+const RequestService = require("../Node-Project/services/RequestService");
+
+const authenticatedUser = function (req, res, next) {
+  let reqInfo = RequestService.reqHelper(req);
+  console.log("authenticated");
+  if (reqInfo.authenticated) {
+
+    next()
+  } else {
+    res.redirect(
+      "/user/login"
+    );
+  }
+};
+
+app.use(authenticatedUser)
+
+
+// profile routes
+app.use("/profiles", profilesRouter);
 
 // catch any unmatched routes
 app.all("/*", (req, res) => {
