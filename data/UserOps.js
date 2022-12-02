@@ -64,7 +64,22 @@ class UserOps {
 
     return profiles;
   }
-
+  
+  async addCommentToUser(comment, username) {
+    console.log("addcommentToUser::: "+username);
+    let user = await User.findOne({ _id: username });
+    user.comments.push(comment);
+    try {
+      let result = await user.save();
+      console.log("updated user: ", result);
+      const response = { user: result, errorMessage: "" };
+      return response;
+    } catch (error) {
+      console.log("error saving user: ", result);
+      const response = { user: user, errorMessage: error };
+      return response;
+    }
+  }
   /*async createProfile(profileObj) {
     try {
       const error = await profileObj.validateSync();

@@ -1,6 +1,24 @@
 <br/>
 
 <main>
-    <h2><%= profileName %></h2>
+    <div class="userProfile">
+        <h2><%= profileFirstName %> <%= profileLastName %></h2>
+        <p>Username : <%= profileName %></p>
+        <p>Name : <%= profileFirstName %> <%= profileLastName %></p>
+        <p>Email : <%= profileEmail %></p>
+        <p>Leave me a comment: </p>
+    </div>
+    <form action="/profiles/<%= profileId %>" method="POST">
+        <textarea id="comments" class="comments" name="comments"></textarea>
+        <button type="submit">Submit</button>
+    </form>
     <a href="/profiles/edit/<%= profileId %>"><button>Edit</button></a>
 </main>
+
+<ul id="commentList">
+    <% for (let i=0; i < profileComment.length; i++) { %>
+        <li>
+            <%= profileComment[i].commentBody%> - <%= profileComment[i].commentAuthor%> 
+        </li>
+        <% } %>
+</ul>
