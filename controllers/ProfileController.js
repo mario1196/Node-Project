@@ -12,9 +12,9 @@ const RequestService = require("../services/RequestService");
 exports.Index = async function (request, response) {
   let reqInfo = RequestService.reqHelper(request);
   console.log("loading profiles from controller");
-  if(request.body.searchProfile) {
+  if(request.query.searchProfile) {
     console.log("search");
-    let profiles = await _userOps.getProfileBySearch(request.body.searchProfile);
+    let profiles = await _userOps.getProfileBySearch(request.query.searchProfile, request.query.searchCategory);
     if (profiles) {
       response.render("profiles", {
       title: "Express Yourself - Profiles",
@@ -165,13 +165,35 @@ exports.DeleteProfileById = async function (request, response) {
 // Handle edit profile form GET request
 exports.Edit = async function (request, response) {
   let reqInfo = RequestService.reqHelper(request);
-    const profileId = request.params.id;
-    let profileObj = await _userOps.getProfileById(profileId);
-    response.render("profile-form", {
-      title: "Edit Profile",
-      errorMessage: "",
-      profile_id: profileId,
-      profile: profileObj,
+  const profileId = request.params.id;
+  let profileObj = await _userOps.getProfileById(profileId);
+  response.render("profile-form", {
+    title: "Edit Profile",
+    errorMessage: "",
+    profile_id: profileId,
+    profile: profileObj,
+    reqInfo: reqInfo
+  });
+};
+
+// Handle profile edit form submission
+exports.EditProfile = async function (request, response) {
+  let reqInfo = RequestService.reqHelper(request);
+  const profileId = request.body.profile_id;
+  const profileName = request.body.name;
+
+  // send these to profileOps to update and save the document
+  let responseObj = await _userOps.updateProfileById(profileId, profileName);
+
+  // if no errors, save was successful
+  if (responseObj.errorMsg == "") {
+    let profiles = await _userOps.getAllProfiles();
+    response.render("profile", {
+      title: "Express Yourself - " + responseObj.obj.username,
+      profiles: profiles,
+      profileId: responseObj.obj._id.valueOf(),
+      profileName: responseObj.obj.username,
+      layout: "./layouts/sidebar",
       reqInfo: reqInfo
     });
   };

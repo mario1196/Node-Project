@@ -14,6 +14,7 @@
     <input id="email" name="email" type="text" value="<%= profile.email ? profile.email : '' %>" >
     <label for="interests">Interests:</label>
     <input id="interests" name="interests" type="text" value="<%= profile.interests.join(', ') %>">
+    
     <input id="profilePic" name="profilePic" type="hidden" value="<%= profile.imagePath %>">
     <% if (profile.imagePath) { %>
         <img src="<%= profile.imagePath %>">
