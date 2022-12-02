@@ -103,15 +103,33 @@ passport.deserializeUser(User.deserializeUser());
 // index routes
 app.use(indexRouter);
 
-// movie routes
-app.use("/profiles", profilesRouter);
-
 // api routes
 app.use("/api", apiRouter);
 
 // User routes
 const userRouter = require("./routers/userRouter");
 app.use("/user", userRouter);
+
+const RequestService = require("../Node-Project/services/RequestService");
+
+const authenticatedUser = function (req, res, next) {
+  let reqInfo = RequestService.reqHelper(req);
+  console.log("authenticated");
+  if (reqInfo.authenticated) {
+
+    next()
+  } else {
+    res.redirect(
+      "/user/login"
+    );
+  }
+};
+
+app.use(authenticatedUser)
+
+
+// profile routes
+app.use("/profiles", profilesRouter);
 
 // catch any unmatched routes
 app.all("/*", (req, res) => {

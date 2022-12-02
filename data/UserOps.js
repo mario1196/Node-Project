@@ -50,21 +50,36 @@ class UserOps {
 
   async getProfileBySearch(search, searchCategory) {
     console.log(`getting profile by search ${search}`);
-
+    const filter =  { $regex: search, $options: "i" } ;
     let profiles;
     if(searchCategory === "firstName"){
-      profiles = await User.find({ firstName: {"$regex" :search, "$options":"i"} }).sort( {username: 1} );
+      profiles = await User.find({ firstName: filter }).sort( {username: 1} );
     } else if(searchCategory === "lastName"){
-      profiles = await User.find({ lastName: {"$regex" :search, "$options":"i"} }).sort( {username: 1} );
+      profiles = await User.find({ lastName: filter }).sort( {username: 1} );
     } else if(searchCategory === "email"){
-      profiles = await User.find({ email: {"$regex" :search, "$options":"i"} }).sort( {username: 1} );
+      profiles = await User.find({ email: filter }).sort( {username: 1} );
     } else {
-      profiles = await User.find({ username: {"$regex" :search, "$options":"i"} }).sort( {username: 1} );
+      profiles = await User.find({ username: filter }).sort( {username: 1} );
     }
 
     return profiles;
   }
-
+  
+  async addCommentToUser(comment, username) {
+    console.log("addcommentToUser::: "+username);
+    let user = await User.findOne({ _id: username });
+    user.comments.push(comment);
+    try {
+      let result = await user.save();
+      console.log("updated user: ", result);
+      const response = { user: result, errorMessage: "" };
+      return response;
+    } catch (error) {
+      console.log("error saving user: ", result);
+      const response = { user: user, errorMessage: error };
+      return response;
+    }
+  }
   /*async createProfile(profileObj) {
     try {
       const error = await profileObj.validateSync();
