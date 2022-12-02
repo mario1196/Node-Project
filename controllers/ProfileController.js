@@ -12,15 +12,7 @@ const RequestService = require("../services/RequestService");
 exports.Index = async function (request, response) {
   let reqInfo = RequestService.reqHelper(request);
   console.log("loading profiles from controller");
-
-  ///david added in this information////
-  if (reqInfo.authenticated) {
-    let roles = await _userOps.getRolesByUsername(reqInfo.username);
-    let sessionData = req.session;
-    sessionData.roles = roles;
-    reqInfo.roles = roles;
-    let userInfo = await _userOps.getUserByUsername(reqInfo.username);
-    if(request.query.searchProfile) {
+  if(request.query.searchProfile) {
     console.log("search");
     let profiles = await _userOps.getProfileBySearch(request.query.searchProfile, request.query.searchCategory);
     if (profiles) {
@@ -29,51 +21,30 @@ exports.Index = async function (request, response) {
       profiles: profiles,
       reqInfo: reqInfo
     });
-    }
-    if (request.body.searchProfile) {
-      console.log("search");
-      let profiles = await _userOps.getProfileBySearch(request.body.searchProfile);
-      if (profiles) {
-        response.render("profiles", {
-          title: "Express Yourself - Profiles",
-          profiles: profiles,
-          reqInfo: reqInfo,
-          userInfo: userInfo
-        });
-      } else {
-        response.render("profiles", {
-          title: "Express Yourself - Profiles",
-          profiles: [],
-          reqInfo: reqInfo
-        });
-      }
     } else {
-      let profiles = await _userOps.getAllProfiles();
-      if (profiles) {
-        response.render("profiles", {
-          title: "Express Yourself - Profiles",
-          profiles: profiles,
-          reqInfo: reqInfo
-        });
-      } else {
-        response.render("profiles", {
-          title: "Express Yourself - Profiles",
-          profiles: [],
-          reqInfo: reqInfo
-        });
-      }
+      response.render("profiles", {
+        title: "Express Yourself - Profiles",
+        profiles: [],
+        reqInfo: reqInfo
+      });
     }
-    // return res.render("user/profile", {
-    //   reqInfo: reqInfo,
-    //   userInfo: userInfo,
-    // });
   } else {
-    response.redirect(
-      // "/user/login?errorMessage=You must be logged in to view this page."
-      "https://www.youtube.com/watch?v=oHg5SJYRHA0"
-    );
-  };
-}
+    let profiles = await _userOps.getAllProfiles();
+    if (profiles) {
+      response.render("profiles", {
+      title: "Express Yourself - Profiles",
+      profiles: profiles,
+      reqInfo: reqInfo
+    });
+    } else {
+      response.render("profiles", {
+        title: "Express Yourself - Profiles",
+        profiles: [],
+        reqInfo: reqInfo
+      });
+    }
+  }
+};
 
 exports.Detail = async function (request, response) {
   let reqInfo = RequestService.reqHelper(request);
