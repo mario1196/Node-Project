@@ -74,11 +74,32 @@ class ProfileOps {
     return result;
   }
 
+  /*
   async updateProfileById(id, profileName) {
     console.log(`updating profile by id ${id}`);
     const profile = await Profile.findById(id);
     console.log("original profile: ", profile);
     profile.name = profileName;
+
+    let result = await profile.save();
+    console.log("updated profile: ", result);
+    return {
+      obj: result,
+      errorMsg: "",
+    };
+  }
+  */
+
+  async updateProfileById(id, profileName, profileFirstName, profileLastName, profileInterests, imagePath, email) {
+    console.log(`updating profile by id ${id}`);
+    const profile = await Profile.findById(id);
+    console.log("original profile: ", profile);
+    profile.profileName = profileName;
+    profile.profileFirstName = profileFirstName;
+    profile.profileLastName = profileLastName;
+    profile.interests = profileInterests;
+    profile.imagePath = imagePath;
+    profile.email = email;
 
     let result = await profile.save();
     console.log("updated profile: ", result);
