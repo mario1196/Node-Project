@@ -88,11 +88,16 @@ class UserOps {
     return result;
   }
 
-  async updateProfileById(id, profileName) {
+  async updateProfileById(id, profileName, profileFirstName, profileLastName, email, profileInterests, imagePath) {
     console.log(`updating profile by id ${id}`);
     const profile = await User.findById(id);
     console.log("original profile: ", profile);
-    profile.firstName = profileName;
+    profile.username = profileName;
+    profile.firstName = profileFirstName;
+    profile.lastName = profileLastName;
+    profile.email = email;
+    profile.interests = profileInterests;
+    profile.imagePath = imagePath;
 
     let result = await profile.save();
     console.log("updated profile: ", result);

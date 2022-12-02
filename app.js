@@ -17,6 +17,7 @@ db.on("error", console.error.bind(console, "MongoDB connection error:"));
 const express = require("express");
 const path = require("path");
 const bodyParser = require("body-parser");
+const fileUpload = require('express-fileupload');
 
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
@@ -47,6 +48,7 @@ app.use(logger("dev")); // method, path, status, time
 // Express.static middleware to make the public folder globally accessible
 app.use(express.static("public"));
 
+app.use(fileUpload());
 // Enable layouts
 app.use(expressLayouts);
 // Set the default layout
