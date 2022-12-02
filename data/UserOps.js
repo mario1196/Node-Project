@@ -50,16 +50,16 @@ class UserOps {
 
   async getProfileBySearch(search, searchCategory) {
     console.log(`getting profile by search ${search}`);
-
+    const filter =  { $regex: search, $options: "i" } ;
     let profiles;
     if(searchCategory === "firstName"){
-      profiles = await User.find({ firstName: {"$regex" :search, "$options":"i"} }).sort( {username: 1} );
+      profiles = await User.find({ firstName: filter }).sort( {username: 1} );
     } else if(searchCategory === "lastName"){
-      profiles = await User.find({ lastName: {"$regex" :search, "$options":"i"} }).sort( {username: 1} );
+      profiles = await User.find({ lastName: filter }).sort( {username: 1} );
     } else if(searchCategory === "email"){
-      profiles = await User.find({ email: {"$regex" :search, "$options":"i"} }).sort( {username: 1} );
+      profiles = await User.find({ email: filter }).sort( {username: 1} );
     } else {
-      profiles = await User.find({ username: {"$regex" :search, "$options":"i"} }).sort( {username: 1} );
+      profiles = await User.find({ username: filter }).sort( {username: 1} );
     }
 
     return profiles;
