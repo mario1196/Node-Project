@@ -8,12 +8,17 @@
         <p>Email : <%= profileEmail %></p>
 
         <img src="<%= profileImagePath %>" alt="<%= profileFirstName %>" />
-
+        <p>Interests: 
+        <% if(profileInterests.length != 0)  {%>
         <ul>
-        <% for (let j = 0; j < profileInterests.length; j++) { %>
-            <li><%= profileInterests[j] %></li>
+            <% for (let j = 0; j < profileInterests.length; j++) { %>
+                <li><%= profileInterests[j] %></li>
+                <% } %>
+            </ul>
+        <% }else{ %>
+            <p>no interests</p>
         <% } %>
-        </ul>
+        </p>
         <p>Leave me a comment: </p>
     </div>
     <form action="/profiles/<%= profileId %>" method="POST">
