@@ -1,0 +1,26 @@
+Users
+1.) can add comments to any profiles
+2.) can only edit their own profile
+    - add a photo
+    - add interests 
+
+
+
+
+
+Admins - Highest authority 
+1.) can assign roles to users (admin, manager, or both) 
+
+
+
+
+Managers
+1.) cannot assign roles
+2.) can edit all profiles
+
+
+
+
+Other Requirements 
+1.) show username when comments are created 
+2.) all other areas must be secure except the login page 
