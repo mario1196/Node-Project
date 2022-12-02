@@ -261,6 +261,10 @@ exports.Edit = async function (request, response) {
         profiles: profiles,
         profileId: responseObj.obj._id.valueOf(),
         profileName: responseObj.obj.username,
+        profileFirstName: responseObj.obj.firstName,
+        profileLastName: responseObj.obj.lastName,
+        profileEmail: responseObj.obj.email,
+        profileComment: responseObj.obj.comments,
         layout: "./layouts/sidebar",
         reqInfo: reqInfo
       });
