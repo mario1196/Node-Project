@@ -58,6 +58,11 @@ exports.Detail = async function (request, response) {
       profiles: profiles,
       profileId: request.params.id,
       profileName: profile.username,
+      profileFirstName: profile.firstName,
+      profileLastName: profile.lastName,
+      profileEmail: profile.email,
+      profileComment: profile.comments,
+      profileEmail: profile.email,
       layout: "./layouts/sidebar",
       reqInfo: reqInfo
     });
@@ -70,6 +75,45 @@ exports.Detail = async function (request, response) {
   }
 };
 
+exports.Comment = async function (request, response) {
+  let reqInfo = RequestService.reqHelper(request);
+
+  const comment = {
+    commentBody: request.body.comments,
+    commentAuthor: reqInfo.username,
+  };
+  let profileInfo = await _userOps.addCommentToUser(
+    comment,
+    request.params.id
+  );
+
+  const profileId = request.params.id;
+  console.log(`loading single profile by id ${profileId}`);
+  let profile = await _userOps.getProfileById(profileId);
+  let profiles = await _userOps.getAllProfiles();
+  if (profile) {
+    response.render("profile", {
+      title: "Express Yourself - " + profile.name,
+      profiles: profiles,
+      profileId: request.params.id,
+      profileName: profile.username,
+      profileFirstName: profile.firstName,
+      profileLastName: profile.lastName,
+      profileEmail: profile.email,
+      profileComment: profile.comments,
+      profileCommentBody: profileInfo.commentBody,
+      profileCommentAuthor: profileInfo.commentAuthor,
+      layout: "./layouts/sidebar",
+      reqInfo: reqInfo
+    });
+  } else {
+    response.render("profiles", {
+      title: "Express Yourself - Profiles",
+      profiles: [],
+      reqInfo: reqInfo
+    });
+  }
+};
 // Handle profile form GET request
 exports.Create = async function (request, response) {
   let reqInfo = RequestService.reqHelper(request);
