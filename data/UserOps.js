@@ -50,16 +50,16 @@ class UserOps {
 
   async getProfileBySearch(search, searchCategory) {
     console.log(`getting profile by search ${search}`);
-
+    const filter =  { $regex: search, $options: "i" } ;
     let profiles;
     if(searchCategory === "firstName"){
-      profiles = await User.find({ firstName: {"$regex" :search, "$options":"i"} }).sort( {username: 1} );
+      profiles = await User.find({ firstName: filter }).sort( {username: 1} );
     } else if(searchCategory === "lastName"){
-      profiles = await User.find({ lastName: {"$regex" :search, "$options":"i"} }).sort( {username: 1} );
+      profiles = await User.find({ lastName: filter }).sort( {username: 1} );
     } else if(searchCategory === "email"){
-      profiles = await User.find({ email: {"$regex" :search, "$options":"i"} }).sort( {username: 1} );
+      profiles = await User.find({ email: filter }).sort( {username: 1} );
     } else {
-      profiles = await User.find({ username: {"$regex" :search, "$options":"i"} }).sort( {username: 1} );
+      profiles = await User.find({ username: filter }).sort( {username: 1} );
     }
 
     return profiles;
@@ -114,11 +114,16 @@ class UserOps {
     return result;
   }
 
-  async updateProfileById(id, profileName) {
+  async updateProfileById(id, profileName, profileFirstName, profileLastName, email, profileInterests, imagePath) {
     console.log(`updating profile by id ${id}`);
     const profile = await User.findById(id);
     console.log("original profile: ", profile);
-    profile.firstName = profileName;
+    profile.username = profileName;
+    profile.firstName = profileFirstName;
+    profile.lastName = profileLastName;
+    profile.email = email;
+    profile.interests = profileInterests;
+    profile.imagePath = imagePath;
 
     let result = await profile.save();
     console.log("updated profile: ", result);
