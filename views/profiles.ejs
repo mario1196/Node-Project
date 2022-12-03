@@ -1,18 +1,18 @@
 <div style="display: flex">
-<form action="/profiles" method="get">
-    <select name="searchCategory" id="searchCategory">
-        <option value="userName", id="userName">User Name</option>
-        <option value="firstName", id="firstName">First Name</option>
-        <option value="lastName", id ="lastName">Last Name</option>
-        <option value="email", id ="email">Email</option>
-      </select>
-    <input type="text" id="searchProfile" name="searchProfile">
-    <button type="submit">Search</button>
-</form>
+    <form action="/profiles" method="get">
+        <select name="searchCategory" id="searchCategory">
+            <option value="userName" , id="userName">User Name</option>
+            <option value="firstName" , id="firstName">First Name</option>
+            <option value="lastName" , id="lastName">Last Name</option>
+            <option value="email" , id="email">Email</option>
+        </select>
+        <input type="text" id="searchProfile" name="searchProfile">
+        <button type="submit">Search</button>
+    </form>
 
-<form action="/profiles" method="GET">
-    <button type="submit">Back</button>
-</form>
+    <form action="/profiles" method="GET">
+        <button type="submit">Back</button>
+    </form>
 </div>
 
 <!--<div>
@@ -25,7 +25,9 @@
             <a href="/profiles/<%= profiles[i].id%>">
                 <%= profiles[i].username%>
             </a>
-            <a href="/profiles/delete/<%= profiles[i].id %>"> <button>Delete</button></a>
+            <% if (reqInfo.roles.includes("Admin")) { %>
+                <a href="/profiles/delete/<%= profiles[i].id %>"> <button>Delete</button></a>
+                <% } %>
         </li>
         <% } %>
 </ul>
