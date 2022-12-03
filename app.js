@@ -28,9 +28,12 @@ const app = express();
 const port = process.envPORT || 3003;
 
 // load our routers
-const apiRouter = require("./routers/apiRouter");
+// const apiRouter = require("./routers/apiRouter");
 const indexRouter = require("./routers/indexRouter");
 const profilesRouter = require("./routers/profilesRouter");
+
+// load request service 
+const RequestService = require("../Node-Project/services/RequestService");
 
 // tell Express where to find our templates (views)
 app.set("views", path.join(__dirname, "views"));
@@ -102,13 +105,11 @@ passport.deserializeUser(User.deserializeUser());
 app.use(indexRouter);
 
 // api routes
-app.use("/api", apiRouter);
+// app.use("/api", apiRouter);
 
 // User routes
 const userRouter = require("./routers/userRouter");
 app.use("/user", userRouter);
-
-const RequestService = require("../Node-Project/services/RequestService");
 
 const authenticatedUser = function (req, res, next) {
   let reqInfo = RequestService.reqHelper(req);
@@ -118,7 +119,7 @@ const authenticatedUser = function (req, res, next) {
     next()
   } else {
     res.redirect(
-      "/user/login"
+      "/user/login?errorMessage=You must be logged in to view this page."
     );
   }
 };
