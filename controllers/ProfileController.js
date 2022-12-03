@@ -248,10 +248,12 @@ exports.Edit = async function (request, response) {
     if (request.body.interests) {
       profileInterests = request.body.interests.split(", ");
     }
+    console.log("ROLES", request.body.roles);
+    const profileRoles = request.body.roles;
     const email = request.body.email;
   
     // send these to profileOps to update and save the document
-    let responseObj = await _userOps.updateProfileById(profileId, profileName, profileFirstName, profileLastName, email, profileInterests, imagePath);
+    let responseObj = await _userOps.updateProfileById(profileId, profileName, profileFirstName, profileLastName, email, profileInterests, imagePath, profileRoles);
   
     // if no errors, save was successful
     if (responseObj.errorMsg == "") {
