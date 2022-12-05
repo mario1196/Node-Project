@@ -19,7 +19,7 @@
         <textarea id="comments" class="comments" name="comments"></textarea>
         <button type="submit">Submit</button>
     </form>
-    <% if (reqInfo.roles.includes("Admin") || reqInfo.roles.includes("Manager")) { %>
+    <% if (reqInfo.roles.includes("Admin") || reqInfo.roles.includes("Manager") || (reqInfo.roles.includes("User") && reqInfo.username == profileName)) { %>
         <a href="/profiles/edit/<%= profileId %>"><button>Edit</button></a>
         <% } %>
 </main>

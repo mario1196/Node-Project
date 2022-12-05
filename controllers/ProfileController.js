@@ -11,6 +11,10 @@ const RequestService = require("../services/RequestService");
 
 exports.Index = async function (request, response) {
   let reqInfo = RequestService.reqHelper(request);
+  let roles = await _userOps.getRolesByUsername(reqInfo.username);
+  let sessionData = request.session;
+  sessionData.roles = roles;
+  reqInfo.roles = roles;
   console.log("loading profiles from controller");
   if(request.query.searchProfile) {
     console.log("search");
