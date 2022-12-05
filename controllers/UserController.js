@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const passport = require("passport");
 const RequestService = require("../services/RequestService");
+const path = require("path");
 
 // import and instantiate our userOps object
 const UserOps = require("../data/UserOps");
@@ -20,11 +21,27 @@ exports.RegisterUser = async function (req, res) {
   if (password == passwordConfirm) {
     // Creates user object with mongoose model.
     // Note that the password is not present.
+    const { picture } = req.files;
+    let imagePath = req.body.profilePic || "";
+    if (picture) {
+      imagePath = `/images/${picture.name}`;
+      const serverPath = path.join(__dirname, "../public", imagePath);
+      picture.mv(serverPath);
+    }
+    let profileInterests = [];
+    if (req.body.interests) {
+      profileInterests = req.body.interests.split(", ");
+    }
+    //console.log("ROLES", req.body.roles);
+    //const profileRoles = req.body.roles;
     const newUser = new User({
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       email: req.body.email,
       username: req.body.username,
+      roles: ["User"],
+      imagePath: imagePath,
+      interests: profileInterests
     });
 
     // Uses passport to register the user.

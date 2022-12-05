@@ -23,7 +23,7 @@
     <% for (let i=0; i < profiles.length; i++) { %>
         <li>
             <a href="/profiles/<%= profiles[i].id%>">
-                <%= profiles[i].username%>
+                <%= profiles[i].firstName + " " +profiles[i].lastName%>
             </a>
             <% if (reqInfo.roles.includes("Admin")) { %>
                 <a href="/profiles/delete/<%= profiles[i].id %>"> <button>Delete</button></a>
