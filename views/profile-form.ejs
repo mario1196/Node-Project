@@ -3,8 +3,10 @@
 </h3>
 
 <form action="/profiles/edit<%= profile_id ? "/"+profile_id : "" %>" method="POST" enctype="multipart/form-data">
+  <input type="hidden" id="profile_id" name="profile_id" value="<%= profile_id %>">
+  
   <% if (reqInfo.roles.includes("Admin") || (reqInfo.roles.includes("User") && reqInfo.username == profile.username) || (reqInfo.roles.includes("Manager") && reqInfo.username == profile.username)) { %>   
-    <input type="hidden" id="profile_id" name="profile_id" value="<%= profile_id %>">
+    
     <label for="name">Username:</label>
     <input id="name" name="name" type="text" value="<%= profile.username ? profile.username : '' %>" readonly><br>
     <label for="firstname">First Name:</label>
