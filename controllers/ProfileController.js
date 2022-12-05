@@ -56,14 +56,18 @@ exports.Detail = async function (request, response) {
   console.log(`loading single profile by id ${profileId}`);
   let profile = await _userOps.getProfileById(profileId);
   let profiles = await _userOps.getAllProfiles();
+  console.log(`images:: ${profile.imagePath}`);
+  console.log(`images:: ${profile.interests}`);
   if (profile) {
     response.render("profile", {
-      title: "Express Yourself - " + profile.name,
+      title: "Express Yourself - " + profile.username,
       profiles: profiles,
       profileId: request.params.id,
       profileName: profile.username,
       profileFirstName: profile.firstName,
       profileLastName: profile.lastName,
+      profileImagePath: profile.imagePath,
+      profileInterests: profile.interests,
       profileEmail: profile.email,
       profileComment: profile.comments,
       profileEmail: profile.email,
@@ -97,12 +101,14 @@ exports.Comment = async function (request, response) {
   let profiles = await _userOps.getAllProfiles();
   if (profile) {
     response.render("profile", {
-      title: "Express Yourself - " + profile.name,
+      title: "Express Yourself - " + profile.username,
       profiles: profiles,
       profileId: request.params.id,
       profileName: profile.username,
       profileFirstName: profile.firstName,
       profileLastName: profile.lastName,
+      profileImagePath: profile.imagePath,
+      profileInterests: profile.interests,
       profileEmail: profile.email,
       profileComment: profile.comments,
       profileCommentBody: profileInfo.commentBody,
