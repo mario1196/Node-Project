@@ -27,6 +27,18 @@ class UserOps {
     }
   }
 
+  async getIdByUsername(username) {
+    let user = await User.findOne(
+      { username: username }
+    );
+    if (user) {
+      const response = { user: user, errorMessage: "" };
+      return response;
+    } else {
+      return null;
+    }
+  }
+
   async getRolesByUsername(username) {
     let user = await User.findOne({ username: username }, { _id: 0, roles: 1 });
     if (user.roles) {
