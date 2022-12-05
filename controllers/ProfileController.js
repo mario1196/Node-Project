@@ -48,13 +48,19 @@ exports.Index = async function (request, response) {
 
 exports.Detail = async function (request, response) {
   let reqInfo = RequestService.reqHelper(request);
+  let roles = await _userOps.getRolesByUsername(reqInfo.username);
+  let sessionData = request.session;
+  sessionData.roles = roles;
+  reqInfo.roles = roles;
   const profileId = request.params.id;
   console.log(`loading single profile by id ${profileId}`);
   let profile = await _userOps.getProfileById(profileId);
   let profiles = await _userOps.getAllProfiles();
+  console.log(`images:: ${profile.imagePath}`);
+  console.log(`images:: ${profile.interests}`);
   if (profile) {
     response.render("profile", {
-      title: "Express Yourself - " + profile.name,
+      title: "Express Yourself - " + profile.username,
       profiles: profiles,
       profileId: request.params.id,
       profileName: profile.username,
@@ -95,7 +101,7 @@ exports.Comment = async function (request, response) {
   let profiles = await _userOps.getAllProfiles();
   if (profile) {
     response.render("profile", {
-      title: "Express Yourself - " + profile.name,
+      title: "Express Yourself - " + profile.username,
       profiles: profiles,
       profileId: request.params.id,
       profileName: profile.username,
@@ -252,10 +258,12 @@ exports.Edit = async function (request, response) {
     if (request.body.interests) {
       profileInterests = request.body.interests.split(", ");
     }
+    console.log("ROLES", request.body.roles);
+    const profileRoles = request.body.roles;
     const email = request.body.email;
   
     // send these to profileOps to update and save the document
-    let responseObj = await _userOps.updateProfileById(profileId, profileName, profileFirstName, profileLastName, email, profileInterests, imagePath);
+    let responseObj = await _userOps.updateProfileById(profileId, profileName, profileFirstName, profileLastName, email, profileInterests, imagePath, profileRoles);
   
     // if no errors, save was successful
     if (responseObj.errorMsg == "") {

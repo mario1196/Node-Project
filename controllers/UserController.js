@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const passport = require("passport");
 const RequestService = require("../services/RequestService");
+const path = require("path");
 
 // import and instantiate our userOps object
 const UserOps = require("../data/UserOps");
@@ -20,11 +21,27 @@ exports.RegisterUser = async function (req, res) {
   if (password == passwordConfirm) {
     // Creates user object with mongoose model.
     // Note that the password is not present.
+    const { picture } = req.files;
+    let imagePath = req.body.profilePic || "";
+    if (picture) {
+      imagePath = `/images/${picture.name}`;
+      const serverPath = path.join(__dirname, "../public", imagePath);
+      picture.mv(serverPath);
+    }
+    let profileInterests = [];
+    if (req.body.interests) {
+      profileInterests = req.body.interests.split(", ");
+    }
+    //console.log("ROLES", req.body.roles);
+    //const profileRoles = req.body.roles;
     const newUser = new User({
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       email: req.body.email,
       username: req.body.username,
+      roles: ["User"],
+      imagePath: imagePath,
+      interests: profileInterests
     });
 
     // Uses passport to register the user.
@@ -79,8 +96,9 @@ exports.Login = async function (req, res) {
 
 // Receives login information & user roles, then store roles in session and redirect depending on authentication pass or fail.
 exports.LoginUser = async (req, res, next) => {
+  let user = await _userOps.getIdByUsername(req.body.username);
   passport.authenticate("local", {
-    successRedirect: "/profiles",//"/user/profile",
+    successRedirect: "/profiles/" + user.user.id,//"/user/profile",
     failureRedirect: "/user/login?errorMessage=Invalid login.",
   })(req, res, next);
 };
@@ -122,17 +140,6 @@ exports.Profile = async function (req, res) {
   } else {
     res.redirect(
       "/user/login?errorMessage=You must be logged in to view this page."
-    );
-  }
-};
-
-exports.authenticatedUser = function (req, res, next) {
-  let reqInfo = RequestService.reqHelper(req);
-  if (reqInfo.authenticated) {
-    next()
-  } else {
-    res.redirect(
-      "/user/login"
     );
   }
 };

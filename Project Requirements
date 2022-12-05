@@ -5,20 +5,13 @@ Users
     - add interests 
 
 
-
-
-
 Admins - Highest authority 
 1.) can assign roles to users (admin, manager, or both) 
-
-
 
 
 Managers
 1.) cannot assign roles
 2.) can edit all profiles
-
-
 
 
 Other Requirements 
@@ -29,12 +22,17 @@ Other Requirements
 
 To do List
 1.) users can add a photo - erik
-2.) users can add interests to there own file -erik 
-3.) search by filter - sheng
-4.) details page to show all info, comments - lisa
-5.) secure area authentication - david 
+2.) 
+3.) 
+4.) 
+5.) 
 
 
-What is working
+
+
+DONE LIST!!!! 
 1.) users can register
 2.) users can login
+3.) users can add comments and shows username author
+4.) public cannot access pages unless logged in 
+5.) search filter 

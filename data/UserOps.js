@@ -17,7 +17,19 @@ class UserOps {
   async getUserByUsername(username) {
     let user = await User.findOne(
       { username: username },
-      { _id: 0, username: 1, email: 1, firstName: 1, lastName: 1 }
+      { _id: 0, username: 1, email: 1, firstName: 1, lastName: 1, roles: 1 }
+    );
+    if (user) {
+      const response = { user: user, errorMessage: "" };
+      return response;
+    } else {
+      return null;
+    }
+  }
+
+  async getIdByUsername(username) {
+    let user = await User.findOne(
+      { username: username }
     );
     if (user) {
       const response = { user: user, errorMessage: "" };
@@ -38,7 +50,7 @@ class UserOps {
 
   async getAllProfiles() {
     console.log("getting all profiles");
-    let profiles = await User.find().sort({ username: 1 });
+    let profiles = await User.find().sort({ lastName: 1 });
     return profiles;
   }
 
@@ -53,13 +65,13 @@ class UserOps {
     const filter =  { $regex: search, $options: "i" } ;
     let profiles;
     if(searchCategory === "firstName"){
-      profiles = await User.find({ firstName: filter }).sort( {username: 1} );
+      profiles = await User.find({ firstName: filter }).sort( {lastName: 1} );
     } else if(searchCategory === "lastName"){
-      profiles = await User.find({ lastName: filter }).sort( {username: 1} );
+      profiles = await User.find({ lastName: filter }).sort( {lastName: 1} );
     } else if(searchCategory === "email"){
-      profiles = await User.find({ email: filter }).sort( {username: 1} );
+      profiles = await User.find({ email: filter }).sort( {lastName: 1} );
     } else {
-      profiles = await User.find({ username: filter }).sort( {username: 1} );
+      profiles = await User.find({ username: filter }).sort( {lastName: 1} );
     }
 
     return profiles;
@@ -114,7 +126,7 @@ class UserOps {
     return result;
   }
 
-  async updateProfileById(id, profileName, profileFirstName, profileLastName, email, profileInterests, imagePath) {
+  async updateProfileById(id, profileName, profileFirstName, profileLastName, email, profileInterests, imagePath, profileRoles) {
     console.log(`updating profile by id ${id}`);
     const profile = await User.findById(id);
     console.log("original profile: ", profile);
@@ -124,6 +136,7 @@ class UserOps {
     profile.email = email;
     profile.interests = profileInterests;
     profile.imagePath = imagePath;
+    profile.roles = profileRoles;
 
     let result = await profile.save();
     console.log("updated profile: ", result);
