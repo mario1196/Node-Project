@@ -96,8 +96,9 @@ exports.Login = async function (req, res) {
 
 // Receives login information & user roles, then store roles in session and redirect depending on authentication pass or fail.
 exports.LoginUser = async (req, res, next) => {
+  let user = await _userOps.getIdByUsername(req.body.username);
   passport.authenticate("local", {
-    successRedirect: "/profiles",//"/user/profile",
+    successRedirect: "/profiles/" + user.user.id,//"/user/profile",
     failureRedirect: "/user/login?errorMessage=Invalid login.",
   })(req, res, next);
 };
