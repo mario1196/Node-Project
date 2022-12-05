@@ -18,7 +18,7 @@
     <br>
     <input id="profilePic" name="profilePic" type="hidden" value="<%= profile.imagePath %>">
     <% if (profile.imagePath) { %>
-        <img src="<%= profile.imagePath %>">
+        <img src="<%= profile.imagePath %>" width="500px" height="500px">
     <% } %>
     <label for="picture">Profile Picture:</label>
     <input type="file" name="picture">
