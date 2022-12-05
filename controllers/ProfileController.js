@@ -242,25 +242,34 @@ exports.Edit = async function (request, response) {
       console.log("it is empty");
     }
     */
+    const profileId = request.body.profile_id;
+    const profile = await _userOps.getProfileById(profileId);
+    let imagePath = request.body.profilePic ? request.body.profilePic : profile.imagePath;
+   if(request.files) {
     const { picture } = request.files;
-    let imagePath = request.body.profilePic || "";
+    //let imagePath = request.body.profilePic || "";
     if (picture) {
       imagePath = `/images/${picture.name}`;
       const serverPath = path.join(__dirname, "../public", imagePath);
       picture.mv(serverPath);
     }
+  }
 
-    const profileId = request.body.profile_id;
-    const profileName = request.body.name;
-    const profileFirstName = request.body.firstname;
-    const profileLastName = request.body.lastname;
+    //const profileId = request.body.profile_id;
+    //const profile = await _userOps.getProfileById(profileId);
+    console.log("PROFILE", profile);
+    const profileName = request.body.name ? request.body.name : profile.username;
+    const profileFirstName = request.body.firstname ? request.body.firstname : profile.firstName;
+    const profileLastName = request.body.lastname ? request.body.lastname : profile.lastName;
     let profileInterests = [];
     if (request.body.interests) {
       profileInterests = request.body.interests.split(", ");
+    } else {
+      profileInterests = profile.interests;
     }
     console.log("ROLES", request.body.roles);
-    const profileRoles = request.body.roles;
-    const email = request.body.email;
+    const profileRoles = request.body.roles ? request.body.roles : profile.roles;
+    const email = request.body.email ? request.body.email : profile.email;
   
     // send these to profileOps to update and save the document
     let responseObj = await _userOps.updateProfileById(profileId, profileName, profileFirstName, profileLastName, email, profileInterests, imagePath, profileRoles);
@@ -277,7 +286,9 @@ exports.Edit = async function (request, response) {
         profileLastName: responseObj.obj.lastName,
         profileEmail: responseObj.obj.email,
         profileComment: responseObj.obj.comments,
+        profileImagePath: imagePath,
         layout: "./layouts/sidebar",
+        profileInterests: profileInterests,
         reqInfo: reqInfo
       });
     }
