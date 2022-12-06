@@ -11,6 +11,7 @@ const RequestService = require("../services/RequestService");
 
 exports.Index = async function (request, response) {
   let reqInfo = RequestService.reqHelper(request);
+  let myId = await _userOps.getIdByUsername(reqInfo.username);
   console.log("loading profiles from controller");
   if(request.query.searchProfile) {
     console.log("search");
@@ -19,13 +20,15 @@ exports.Index = async function (request, response) {
       response.render("profiles", {
       title: "Node Yearbook - Profiles",
       profiles: profiles,
-      reqInfo: reqInfo
+      reqInfo: reqInfo,
+      myId: myId.user.id
     });
     } else {
       response.render("profiles", {
         title: "Node Yearbook - Profiles",
         profiles: [],
-        reqInfo: reqInfo
+        reqInfo: reqInfo,
+        myId: myId.user.id
       });
     }
   } else {
@@ -34,13 +37,15 @@ exports.Index = async function (request, response) {
       response.render("profiles", {
       title: "Node Yearbook - Profiles",
       profiles: profiles,
-      reqInfo: reqInfo
+      reqInfo: reqInfo,
+      myId: myId.user.id
     });
     } else {
       response.render("profiles", {
         title: "Node Yearbook - Profiles",
         profiles: [],
-        reqInfo: reqInfo
+        reqInfo: reqInfo,
+        myId: myId.user.id
       });
     }
   }

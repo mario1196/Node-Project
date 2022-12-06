@@ -20,11 +20,7 @@
     <a href="/profiles/edit"><button>Create New Profile</button></a>
 </div>-->
 <br>
-<% for (let i=0; i < profiles.length; i++) { %>
-    <% if (reqInfo.username === profiles[i].username) { %>
-        <a href="/profiles/<%= profiles[i].id %>">My Profile</a>
-    <% } %>
-<% } %>
+<a href="/profiles/<%= myId %>">My Profile</a>
 
 <ul id="myUL">
     <% for (let i=0; i < profiles.length; i++) { %>
