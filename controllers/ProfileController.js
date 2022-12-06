@@ -17,13 +17,13 @@ exports.Index = async function (request, response) {
     let profiles = await _userOps.getProfileBySearch(request.query.searchProfile, request.query.searchCategory);
     if (profiles) {
       response.render("profiles", {
-      title: "Express Yourself - Profiles",
+      title: "Node Yearbook - Profiles",
       profiles: profiles,
       reqInfo: reqInfo
     });
     } else {
       response.render("profiles", {
-        title: "Express Yourself - Profiles",
+        title: "Node Yearbook - Profiles",
         profiles: [],
         reqInfo: reqInfo
       });
@@ -32,13 +32,13 @@ exports.Index = async function (request, response) {
     let profiles = await _userOps.getAllProfiles();
     if (profiles) {
       response.render("profiles", {
-      title: "Express Yourself - Profiles",
+      title: "Node Yearbook - Profiles",
       profiles: profiles,
       reqInfo: reqInfo
     });
     } else {
       response.render("profiles", {
-        title: "Express Yourself - Profiles",
+        title: "Node Yearbook - Profiles",
         profiles: [],
         reqInfo: reqInfo
       });
@@ -60,7 +60,7 @@ exports.Detail = async function (request, response) {
   console.log(`images:: ${profile.interests}`);
   if (profile) {
     response.render("profile", {
-      title: "Express Yourself - " + profile.username,
+      title: "Node Yearbook - " + profile.firstName + " " + profile.lastName,
       profiles: profiles,
       profileId: request.params.id,
       profileName: profile.username,
