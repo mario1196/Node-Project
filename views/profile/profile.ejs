@@ -1,0 +1,50 @@
+<br />
+
+<main>
+    <div class="userProfile">
+        <img src="<%= profileImagePath %>" alt="<%= profileFirstName %>" width="500px" hight="500px" />
+        <h2>
+            <%= profileFirstName %>
+                <%= profileLastName %>
+        </h2>
+        <p>Username : <%= profileName %>
+        </p>
+        <p>Name : <%= profileFirstName %>
+                <%= profileLastName %>
+        </p>
+        <p>Email : <%= profileEmail %>
+        </p>
+
+
+        <p>Interests:
+            <% if(profileInterests.length !=0) {%>
+                <ul>
+                    <% for (let j=0; j < profileInterests.length; j++) { %>
+                        <li>
+                            <%= profileInterests[j] %>
+                        </li>
+                        <% } %>
+                </ul>
+                <% }else{ %>
+                    <p>no interests</p>
+                    <% } %>
+        </p>
+        <p>Leave me a comment: </p>
+    </div>
+    <form action="/profiles/<%= profileId %>" method="POST">
+        <textarea id="comments" class="comments" name="comments"></textarea>
+        <button type="submit">Submit</button>
+    </form>
+    <% if (reqInfo.roles.includes("Admin") || reqInfo.roles.includes("Manager") || (reqInfo.roles.includes("User") &&
+        reqInfo.username==profileName)) { %>
+        <a href="/profiles/edit/<%= profileId %>"><button>Edit</button></a>
+        <% } %>
+</main>
+
+<ul id="commentList">
+    <% for (let i=0; i < profileComment.length; i++) { %>
+        <li>
+            <%= profileComment[i].commentBody%> - <%= profileComment[i].commentAuthor%>
+        </li>
+        <% } %>
+</ul>

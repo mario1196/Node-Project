@@ -5,6 +5,7 @@
             <option value="firstName" , id="firstName">First Name</option>
             <option value="lastName" , id="lastName">Last Name</option>
             <option value="email" , id="email">Email</option>
+            <option value="interests" , id="interests">Interests</option>
         </select>
         <input type="text" id="searchProfile" name="searchProfile">
         <button type="submit">Search</button>
@@ -18,9 +19,12 @@
 <!--<div>
     <a href="/profiles/edit"><button>Create New Profile</button></a>
 </div>-->
+<br>
+<a href="/profiles/<%= myId %>">My Profile</a>
 
 <ul id="myUL">
     <% for (let i=0; i < profiles.length; i++) { %>
+        <% if (reqInfo.username !== profiles[i].username) { %>
         <li>
             <a href="/profiles/<%= profiles[i].id%>">
                 <%= profiles[i].firstName + " " +profiles[i].lastName%>
@@ -30,4 +34,5 @@
                 <% } %>
         </li>
         <% } %>
+    <% } %>
 </ul>

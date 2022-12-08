@@ -70,8 +70,10 @@ class UserOps {
       profiles = await User.find({ lastName: filter }).sort( {lastName: 1} );
     } else if(searchCategory === "email"){
       profiles = await User.find({ email: filter }).sort( {lastName: 1} );
-    } else {
+    } else if(searchCategory === "userName"){
       profiles = await User.find({ username: filter }).sort( {lastName: 1} );
+    } else if(searchCategory === "interests"){
+      profiles = await User.find({ interests: filter }).sort( {lastName: 1} );
     }
 
     return profiles;

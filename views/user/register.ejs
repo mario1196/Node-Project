@@ -1,38 +1,33 @@
-<form action="/user/register" method="POST" enctype="multipart/form-data">   
+<form action="/user/register" method="POST" enctype="multipart/form-data">
     <table>
         <tr>
             <td>User Name: </td>
-            <td><input name="username" type="text"
-                       value="<%= user.username ? user.username : '' %>"></td>
+            <td><input name="username" type="text" value="<%= user.username ? user.username : '' %>"></td>
         </tr>
         <tr>
             <td>Email: </td>
-            <td><input name="email" type="text"
-                       value="<%= user.email ? user.email : '' %>"></td>
-        </tr>  
+            <td><input name="email" type="text" value="<%= user.email ? user.email : '' %>"></td>
+        </tr>
         <tr>
             <td>First Name: </td>
-            <td><input name="firstName" type="text"
-                       value="<%= user.firstName ? user.firstName : '' %>"></td>
-        </tr> 
+            <td><input name="firstName" type="text" value="<%= user.firstName ? user.firstName : '' %>"></td>
+        </tr>
         <tr>
             <td>Last Name: </td>
-            <td><input name="lastName" type="text"
-                       value="<%= user.lastName ? user.lastName : '' %>"></td>
-        </tr>  
+            <td><input name="lastName" type="text" value="<%= user.lastName ? user.lastName : '' %>"></td>
+        </tr>
         <tr>
             <td>Interests: </td>
-            <td><input name="interests" type="text"
-                       value="<%= user.interests ? user.interests.join(', ') : '' %>"></td>
-        </tr>     
+            <td><input name="interests" type="text" value="<%= user.interests ? user.interests.join(', ') : '' %>"></td>
+        </tr>
         <tr>
             <td>Image: </td>
-            <td>    
+            <td>
                 <input id="profilePic" name="profilePic" type="hidden" value="<%= user.imagePath %>">
                 <label for="picture">Profile Picture:</label>
                 <input type="file" name="picture">
             </td>
-        </tr>                    
+        </tr>
         <tr>
             <td>Password:</td>
             <td><input name="password" type="password"></td>
@@ -40,11 +35,13 @@
         <tr>
             <td>Password Confirmation:</td>
             <td><input name="passwordConfirm" type="password"></td>
-        </tr> 
+        </tr>
         <tr>
             <td></td>
             <td> <input type="submit" value="Submit"></td>
         </tr>
     </table>
 </form>
-<%= errorMessage %><br/>
+<h3>
+    <%= errorMessage %>
+</h3>
