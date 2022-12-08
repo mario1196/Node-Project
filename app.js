@@ -29,9 +29,9 @@ const app = express();
 const port = process.envPORT || 3003;
 
 // load our routers
-// const apiRouter = require("./routers/apiRouter");
 const indexRouter = require("./routers/indexRouter");
 const profilesRouter = require("./routers/profilesRouter");
+const userRouter = require("./routers/userRouter");
 
 // load request service 
 const RequestService = require("../Node-Project/services/RequestService");
@@ -59,13 +59,6 @@ app.set("layout", "./layouts/full-width");
 
 // route to demonstrate EJS rendering a static HTML file
 app.get("/static", (req, res) => res.render("static"));
-
-// sending data to an EJS view for dynamic output
-
-//app.get("/users", (req, res) => res.render("profiles", viewData));
-
-// route for the josh page, which includes static resources
-//app.get("/josh", (req, res) => res.sendFile(__dirname + "/pages/josh.html"));
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -106,12 +99,11 @@ passport.deserializeUser(User.deserializeUser());
 // index routes
 app.use(indexRouter);
 
-// api routes
-// app.use("/api", apiRouter);
-
 // User routes
-const userRouter = require("./routers/userRouter");
 app.use("/user", userRouter);
+
+// profile routes
+app.use("/profiles", profilesRouter);
 
 const authenticatedUser = function (req, res, next) {
   let reqInfo = RequestService.reqHelper(req);
@@ -127,10 +119,6 @@ const authenticatedUser = function (req, res, next) {
 };
 
 app.use(authenticatedUser)
-
-
-// profile routes
-app.use("/profiles", profilesRouter);
 
 // catch any unmatched routes
 app.all("/*", (req, res) => {

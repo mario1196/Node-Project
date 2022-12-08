@@ -24,9 +24,9 @@ profilesRouter.post("/", ProfileController.Index);
 //profilesRouter.post("/edit/:id", ProfileController.EditProfile);
 
 // Show Create Profile Form
-profilesRouter.get("/edit", ProfileController.Create);
+//profilesRouter.get("/edit", ProfileController.Create);
 // Handle Create Profile Form Submission
-profilesRouter.post("/edit", ProfileController.CreateProfile);
+//profilesRouter.post("/edit", ProfileController.CreateProfile);
 
 // Show Create Profile Form
 profilesRouter.get("/edit/:id", ProfileController.Edit);

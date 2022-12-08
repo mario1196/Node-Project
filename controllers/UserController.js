@@ -143,29 +143,3 @@ exports.Profile = async function (req, res) {
     );
   }
 };
-
-// Manager Area available to users who belong to Admin and/or Manager role
-exports.ManagerArea = async function (req, res) {
-  let reqInfo = RequestService.reqHelper(req, ["Admin", "Manager"]);
-
-  if (reqInfo.rolePermitted) {
-    res.render("user/manager-area", { errorMessage: "", reqInfo: reqInfo });
-  } else {
-    res.redirect(
-      "/user/login?errorMessage=You must be a manager or admin to access this area."
-    );
-  }
-};
-
-// Admin Area available to users who belong to Admin role
-exports.AdminArea = async function (req, res) {
-  let reqInfo = RequestService.reqHelper(req, ["Admin"]);
-
-  if (reqInfo.rolePermitted) {
-    res.render("user/admin-area", { errorMessage: "", reqInfo: reqInfo });
-  } else {
-    res.redirect(
-      "/user/login?errorMessage=You must be an admin to access this area."
-    );
-  }
-};
